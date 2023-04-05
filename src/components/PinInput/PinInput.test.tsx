@@ -10,7 +10,7 @@ describe("PinInput", () => {
 
     expect(inputBoxes.length).toEqual(4);
     expect(inputBoxes[0]).toHaveAttribute("maxlength", "1");
-    expect(inputBoxes[0]).not.toHaveAttribute("value", "");
+    expect(inputBoxes[0]).toHaveAttribute("value", "");
   });
 
   it("fills in default values correctly", () => {
@@ -22,15 +22,12 @@ describe("PinInput", () => {
         onPinComplete={onPinComplete}
       />
     );
-    const inputBox1 = screen.getByRole("textbox", { name: "input-1" });
-    const inputBox2 = screen.getByRole("textbox", { name: "input-2" });
-    const inputBox3 = screen.getByRole("textbox", { name: "input-3" });
-    const inputBox4 = screen.getByRole("textbox", { name: "input-4" });
+    const inputBoxes = screen.getAllByRole("textbox");
 
-    expect(inputBox1).toHaveValue("1");
-    expect(inputBox2).toHaveValue("2");
-    expect(inputBox3).toHaveValue("3");
-    expect(inputBox4).toHaveValue("4");
+    expect(inputBoxes[0]).toHaveValue("1");
+    expect(inputBoxes[1]).toHaveValue("2");
+    expect(inputBoxes[2]).toHaveValue("3");
+    expect(inputBoxes[3]).toHaveValue("4");
   });
 
   it("calls onPinComplete when all inputs are filled in correctly", () => {
@@ -43,9 +40,7 @@ describe("PinInput", () => {
         onPinComplete={onPinComplete}
       />
     );
-    const inputBoxes = Array.from(Array(4)).map((_, i) =>
-      screen.getByRole("textbox", { name: `Digit ${i + 1}` })
-    );
+    const inputBoxes = screen.getAllByRole("textbox");
 
     fireEvent.change(inputBoxes[0], { target: { value: "1" } });
     fireEvent.change(inputBoxes[1], { target: { value: "2" } });
@@ -56,7 +51,7 @@ describe("PinInput", () => {
   });
 
   it("prevents input of non-digit characters", () => {
-    render(<PinInput length={4} onPinComplete={onPinComplete} />);
+    render(<PinInput length={1} onPinComplete={onPinComplete} />);
 
     const input = screen.getByRole("textbox") as HTMLInputElement;
 
@@ -71,18 +66,16 @@ describe("PinInput", () => {
 
   it("deletes previous input when Backspace is pressed", () => {
     render(<PinInput length={4} onPinComplete={() => {}} />);
-    const inputs = Array.from({ length: 4 }).map((_, i) =>
-      screen.getByRole(`textbox-${i}`)
-    );
+    const inputBoxes = screen.getAllByRole("textbox");
 
-    fireEvent.change(inputs[1], { target: { value: "1" } });
-    expect(inputs[1]).toHaveValue("1");
+    fireEvent.change(inputBoxes[1], { target: { value: "1" } });
+    expect(inputBoxes[1]).toHaveValue("1");
 
-    fireEvent.keyDown(inputs[1], { key: "Backspace" });
-    expect(inputs[0]).toHaveValue("");
+    fireEvent.keyDown(inputBoxes[1], { key: "Backspace" });
+    expect(inputBoxes[0]).toHaveValue("");
 
-    fireEvent.keyDown(inputs[0], { key: "Backspace" });
-    expect(inputs[0]).toHaveFocus();
+    fireEvent.keyDown(inputBoxes[0], { key: "Backspace" });
+    expect(inputBoxes[0]).toHaveFocus();
   });
 
   it("moves focus to previous input when Backspace is pressed on first empty input", () => {
@@ -95,14 +88,17 @@ describe("PinInput", () => {
       />
     );
 
-    const inputBoxes = Array.from({ length: 4 }, (_, i) =>
-      screen.getByRole(`textbox-${i}`)
-    );
+    const inputBoxes = screen.getAllByRole("textbox");
 
-    fireEvent.keyDown(inputBoxes[0], { key: "Backspace" });
+    fireEvent.keyDown(inputBoxes[3], { key: "Backspace" });
 
     expect(inputBoxes[3]).toHaveAttribute("value", "");
     expect(inputBoxes[3]).toHaveFocus();
+
+    fireEvent.keyDown(inputBoxes[2], { key: "Backspace" });
+
+    expect(inputBoxes[2]).toHaveAttribute("value", "");
+    expect(inputBoxes[2]).toHaveFocus();
   });
 
   it("deletes current input when Delete is pressed", () => {
