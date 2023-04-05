@@ -1,0 +1,43 @@
+.pinInputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.pinInputBox {
+  font-size: 1.5rem;
+  text-align: center;
+  border: 1px solid #464f69;
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 8px;
+  width: 50px;
+  height: 50px;
+  margin: 0 4px;
+
+  &:focus {
+    outline: none;
+    border-color: #e6e6e6;
+    box-shadow: 0 0 0 0.2rem rgba(221, 221, 221, 0.247);
+  }
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .pin-input-box {
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+  }
+}
