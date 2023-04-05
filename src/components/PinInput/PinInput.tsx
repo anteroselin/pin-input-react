@@ -108,6 +108,7 @@ const PinInput: FC<PinInputProps> = ({
         <input
           key={index}
           ref={inputRefs[index]}
+          name={`input-${index + 1}`}
           className={styles.pinInputBox}
           type={secretMode ? "password" : "text"}
           maxLength={1}

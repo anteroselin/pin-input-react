@@ -10,3 +10,5 @@ export interface IPinInputContext {
   setPinLength: Dispatch<SetStateAction<number>>;
   setPinCodeType: Dispatch<SetStateAction<RegExp>>;
 }
+
+export type usePinInputType = () => IPinInputContext;
